@@ -1,4 +1,4 @@
-var monthsAsAssoc = 4;
+var monthsAsAssoc = 3;
 var founders = 11;
 var assocToEquityRatio = 3;
 var data = {
