@@ -1,0 +1,60 @@
+.ladders, .month_ladder{
+    display:flex;
+    flex-direction: row;
+    align-items: flex-end;
+}
+
+.member_ladder {
+    flex: 0 1 auto;
+    display:flex;
+    flex-direction: column;
+    min-width:5rem;
+}
+
+.month_header, .month_ladder {
+    flex: 1 1 auto;
+}
+
+.equity_ladder, .am_ladder {
+    flex: 0 1 0;
+    display:flex;
+    flex-direction: column;
+    padding-right: 5px;
+}
+
+.ass_member, .e_member {
+    width: 1.5rem;
+    height: 1.5rem;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.ass_member {
+    border: 1px dashed #222222;
+}
+.warning {
+    border: 1px solid red;
+}
+.e_member {
+    border: 1px solid #222222;
+}
+
+.founder{background: #8CE9FF;}
+
+.may18{background: #FFBF00;}
+.jun18{background: #FFC79A;}
+.jul18{background: #FFCDE3;}
+.aug18{background: #C5B8FF;}
+.sep18{background: #E6A2FF;}
+.oct18{background: #4F8AFF;}
+.nov18{background: #35A6FF;}
+.dec18{background: #5BD3FF;}
+
+.jan19{background: #86FFD3;}
+.feb19{background: #C5FFB8;}
+.mar19{background: #FFCF40;}
+.apr19{background: #FFF55C;}
+.may19{background: #FFA81E;}
+.jun19{background: #FFAEDB;}
+.jul19{background: #D2A5FF;}
+.aug19{background: #9FB7FF;}

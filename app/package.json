@@ -1,0 +1,16 @@
+{
+  "name": "various",
+  "version": "0.0.0",
+  "description": "cohousing web services",
+  "main": "server.js",
+  "private": true,
+  "directories": {
+    "test": "test"
+  },
+  "author": "",
+  "license": "BSD-2-Clause",
+  "dependencies": {
+    "express": "~4.16.0",
+    "moment": "^2.22.2"
+  }
+}

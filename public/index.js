@@ -1,0 +1,176 @@
+var monthsAsAssoc = 3;
+var founders = 11;
+var assocToEquityRatio = 3;
+var data = {
+	inx:-1,
+	months: [], cnts: [], empty: 0,
+	equity: [],
+	assoc:[]};
+data.totalEquity = founders;
+
+
+$(document).ready(function () {
+	initMonth(data,"Mar 18","mar18",0);
+	initMonth(data,"Apr 18","apr18",0);
+	initMonth(data,"May 18","may18",0);
+	initMonth(data,"Jun 18","jun18",0);
+	initMonth(data,"Jul 18","jul18",1);
+	initMonth(data,"Aug 18","aug18",2);
+	initMonth(data,"Sep 18","sep18",0);
+	initMonth(data,"Oct 18","oct18",0);
+	initMonth(data,"Nov 18","nov18",0);
+	initMonth(data,"Dec 18","sep18",1);
+	initMonth(data,"Jan 19","jan19",1);
+	initMonth(data,"Feb 19","feb19",1);
+	initMonth(data,"Mar 19","mar19",1);
+	initMonth(data,"Apr 19","apr19",2);
+	initMonth(data,"May 19","may19",2);
+	initMonth(data,"Jun 19","jun19",3);
+	initMonth(data,"Jul 19","jul19",0);
+
+	updateAll();
+});
+
+function initMonth(data,mTitle, mKey, newEquityCnt) {
+	data.totalEquity = data.totalEquity + newEquityCnt;
+	data.inx++;
+	data.months.push({
+		inx : data.inx,
+		mTitle: mTitle,
+		mKey: mKey
+	});
+	data.equity.push({
+		newEquityCnt : newEquityCnt,
+			equityToDate : data.totalEquity
+	});
+	data.assoc.push({
+		amList: [], newAssocCnt: 0, forMonth: {}
+	});
+	if(newEquityCnt>0) {
+		var neededAMs = newEquityCnt * assocToEquityRatio;
+		// step back X months
+		var amJoinMonthInx = data.inx - monthsAsAssoc;
+		amJoinMonthInx = amJoinMonthInx < 0 ? 0 : amJoinMonthInx;
+		var month = data.months[data.inx];
+		var mKey = month.mKey;
+		// work with the record from X months ago
+		var am = data.assoc[amJoinMonthInx];
+		am.newAssocCnt = neededAMs;
+		am.forMonth = month;
+		// add the needed AMs to each month starting from X months ago up to current month less one
+		for(var i =amJoinMonthInx; i < data.inx; i++){
+			data.assoc[i].amList.push({
+				mKey : mKey, cnt: neededAMs
+			});
+		}
+	}
+}
+
+function changeEquities(event) {
+	var id = event.target.id;
+	var val = event.target.value;
+	console.log("changeEquities all", id, val);
+}
+
+function updateAll(event) {
+	computeBuddlessEquities(data);
+	var html=[];
+	for(var i=0; i < data.equity.length;i++) {
+		oneLadder(html,data,i);
+	}
+	$("#ladderContainer").html(html.join('\n'));
+
+}
+function computeBuddlessEquities(data) {
+	var months = data.months;
+	for(var i = 0; i< months.length; i++ ) {
+		var equity = data.equity[i];
+		var assoc = data.assoc[i];
+		var ams= 0;
+		for(var j=0; j< assoc.amList.length; j++) {
+			ams += assoc.amList[j].cnt;
+		}
+		var available = equity.equityToDate - ams;
+		equity.available = available;
+		console.log("available", i, available);
+	}
+}
+
+function oneLadder(html,data,inx) {
+	var month = data.months[inx];
+	var equity = data.equity[inx];
+	var am = data.assoc[inx];
+	var monthTitle = month.mTitle;
+	var monthKey = month.mKey;
+	var eCnt = equity.newEquityCnt;
+	var amCnt = am.newAssocCnt;
+	var amMonth = am.forMonth.mTitle || '&nbsp;';
+	html.push('<div class="member_ladder">');
+
+
+	html.push('<div class="month_ladder">');
+	html.push('<div id="am_' + monthKey + '" class="am_ladder ladder_level">');
+	addAssocHtml(html,data,inx);
+	html.push('</div>');
+	html.push('<div id="em_' +monthKey + '" class="equity_ladder ladder_level">');
+	addEquityHtml(html,data,inx);
+	html.push('</div>');
+	html.push('</div>');
+
+	html.push('<div class="month_header">');
+	html.push('<div >'+monthTitle + '</div>');
+	var eInput = '<input id="input_'+monthKey+'" onchange="changeEquities(event);" type="number" name="ems" min="1" max="5" value="'+eCnt+'">'
+	html.push('<div >EM: '+ eInput+'</div>');
+	html.push('<div >AM: '+ amCnt+'</div>');
+	html.push('<div >'+ amMonth+'</div>');
+	html.push('</div>');
+
+	html.push('</div>');
+}
+
+function addAssocHtml(html,data,inx){
+	var cnt = 0;
+	var month = data.months[inx];
+	var am = data.assoc[inx];
+	var equity = data.equity[inx];
+	var available = equity.available;
+	var warning = available < 0 ? 'warning' :'';
+	for(var k=0; k< available; k++){
+		html.push("<div class='ass_member empty'>" + (k+1) + "</div>");
+	}
+	for (var j=0; j< am.amList.length; j++){
+		var amMonth = am.amList[j];
+		var monthKey = amMonth.mKey;
+		var cnt = amMonth.cnt;
+		var css = warning + " " + monthKey;
+		for(var k=0; k< cnt; k++){
+			html.push("<div class='ass_member "+ css + "'>" + (k+1) + "</div>");
+		}
+	}
+}
+
+
+function addEquityHtml(html,data,inx){
+	var cnt = founders;
+	var holder=[];
+	for (var k=1; k <= inx; k++) {
+		var month = data.months[k];
+		var equity = data.equity[k];
+		//console.log("addEquityHtml",inx, month);
+		var monthKey = month.mKey;
+		for (var j=0; j< equity.newEquityCnt;j++){
+			cnt++;
+			holder.push("<div class='e_member " +monthKey + "'>" + cnt + "</div>");
+		}
+	}
+	for (var i = holder.length-1; i >= 0; i--) {
+		html.push(holder[i]);
+	}
+	for (var i = founders; i > 0; i--) {
+		html.push("<div class='e_member founder'>" + i + "</div>");
+	}
+}
+
+
+
+
