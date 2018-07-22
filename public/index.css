@@ -1,3 +1,7 @@
+.siteHeader {
+    width: 650px;
+    position: absolute;
+}
 .ladders, .month_ladder{
     display:flex;
     flex-direction: row;
@@ -39,22 +43,30 @@
     border: 1px solid #222222;
 }
 
+input {
+    width: 2rem;
+    height: 1rem;
+    font-size: 1rem;
+}
+
 .founder{background: #8CE9FF;}
 
-.may18{background: #FFBF00;}
-.jun18{background: #FFC79A;}
-.jul18{background: #FFCDE3;}
-.aug18{background: #C5B8FF;}
-.sep18{background: #E6A2FF;}
-.oct18{background: #4F8AFF;}
-.nov18{background: #35A6FF;}
-.dec18{background: #5BD3FF;}
 
-.jan19{background: #86FFD3;}
-.feb19{background: #C5FFB8;}
-.mar19{background: #FFCF40;}
+.apr18{background: #FFF55C;}
 .apr19{background: #FFF55C;}
-.may19{background: #FFA81E;}
-.jun19{background: #FFAEDB;}
-.jul19{background: #D2A5FF;}
+.aug18{background: #9FB7FF;}
 .aug19{background: #9FB7FF;}
+.dec18{background: #70D3FF;}
+.feb19{background: #FFAEDB;}
+.jan19{background: #86FFD3;}
+.jul18{background: #D2A5FF;}
+.jul19{background: #D2A5FF;}
+.jun18{background: #C5FFB8;}
+.jun19{background: #C5FFB8;}
+.mar18{background: #FFCF40;}
+.mar19{background: #FFCF40;}
+.may18{background: #FFA81E;}
+.may19{background: #FFA81E;}
+.nov18{background: #FFC79A;}
+.oct18{background: #4F8AFF;}
+.sep18{background: #E6A2FF;}

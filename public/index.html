@@ -9,6 +9,31 @@
 	<section class="Header-content">
 		<header id="siteHeader" class="siteHeader">
 			<h2>Member ladder</h2>
+			<p>Enter needed equity members under the months below and see if we make our goal of 24 equity members by June 2019.
+
+				Each month shows two columns. The first column is the number of associate members needed to achive the
+				desired number of new equity members <span id="monthsAsAssoc"></span> months later.
+			</p>
+			<p>
+				The assumption is we need to have <span id="assocToEquityRatio"></span> associate members to get one equity member.
+			</p>
+			<p>Try changing the assumptions or when the equity members join</p>
+			<div>
+				<div>
+				Associate to Equity Ratio:
+				</div>
+				<div>
+				<input type="number" min="2" max="6" id="input_assocToEquityRatio" onchange="changeRatio(event);"/>
+				</div>
+			</div>
+			<div>
+				<div>
+					Months as Associate:
+				</div>
+				<div>
+					<input type="number" min="2" max="6" id="input_monthsAsAssoc" onchange="changeMonthsAsAssociate(event);"/>
+				</div>
+			</div>
 		</header>
 	</section>
 	<section >

@@ -1,4 +1,4 @@
-var monthsAsAssoc = 3;
+var monthsAsAssoc = 4;
 var founders = 11;
 var assocToEquityRatio = 3;
 var data = {
@@ -19,7 +19,7 @@ $(document).ready(function () {
 	initMonth(data,"Sep 18","sep18",0);
 	initMonth(data,"Oct 18","oct18",0);
 	initMonth(data,"Nov 18","nov18",0);
-	initMonth(data,"Dec 18","sep18",1);
+	initMonth(data,"Dec 18","dec18",1);
 	initMonth(data,"Jan 19","jan19",1);
 	initMonth(data,"Feb 19","feb19",1);
 	initMonth(data,"Mar 19","mar19",1);
@@ -69,6 +69,17 @@ function initMonth(data,mTitle, mKey, newEquityCnt) {
 	*/
 }
 
+function changeRatio(event) {
+	var val = event.target.value;
+	assocToEquityRatio = val;
+	updateAll();
+}
+
+function changeMonthsAsAssociate(event){
+	var val = event.target.value;
+	monthsAsAssoc = val;
+	updateAll();
+}
 function changeEquities(event) {
 	var id = event.target.id;
 	var m = id.split("_")[1];
@@ -80,6 +91,12 @@ function changeEquities(event) {
 }
 
 function updateAll() {
+	$("#monthsAsAssoc").text(monthsAsAssoc);
+	$("#assocToEquityRatio").text(assocToEquityRatio);
+
+	$("#input_monthsAsAssoc").val(monthsAsAssoc);
+	$("#input_assocToEquityRatio").val(assocToEquityRatio);
+
 	setupData();
 	computeBuddlessEquities(data);
 	var html=[];
@@ -148,11 +165,13 @@ function oneLadder(html,data,inx) {
 	var month = data.months[inx];
 	var equity = data.equity[inx];
 	var am = data.assoc[inx];
-	var monthTitle = month.mTitle;
+	var monthTitle = month.mTitle.split(" ")[0];
 	var monthKey = month.mKey;
 	var eCnt = equity.newEquityCnt;
 	var amCnt = am.newAssocCnt;
-	var amMonth = am.forMonth.mTitle || '&nbsp;';
+	var amMonth = am.forMonth.mTitle ? am.forMonth.mTitle.split(" ")[0] : '&nbsp;';
+	var amMonthKey = am.forMonth.mKey ? am.forMonth.mKey : '';
+
 	html.push('<div class="member_ladder">');
 
 
@@ -166,11 +185,11 @@ function oneLadder(html,data,inx) {
 	html.push('</div>');
 
 	html.push('<div class="month_header">');
-	html.push('<div >'+monthTitle + '</div>');
-	var eInput = '<input id="input_'+inx+'" onchange="changeEquities(event);" type="number" name="ems" min="1" max="5" value="'+eCnt+'">'
-	html.push('<div >EM: '+ eInput+'</div>');
-	html.push('<div >AM: '+ amCnt+'</div>');
-	html.push('<div >'+ amMonth+'</div>');
+	html.push('<div class="'+monthKey+'">'+monthTitle + '</div>');
+	var eInput = '<input id="input_'+inx+'" onchange="changeEquities(event);" type="number" name="ems" min="0" max="5" value="'+eCnt+'">'
+	html.push('<div class="'+monthKey+'">EM: '+ eInput+'</div>');
+	html.push('<div  class="'+amMonthKey+'">'+ 'AM: '+ amCnt+'</div>');
+	html.push('<div  class="'+amMonthKey+'">'+ amMonth+'</div>');
 	html.push('</div>');
 
 	html.push('</div>');
