@@ -3,7 +3,7 @@ var founders = 11;
 var assocToEquityRatio = 3;
 var data = {
 	inx:-1,
-	months: [], cnts: [], empty: 0,
+	months: [], cnts: [],
 	equity: [],
 	assoc:[]};
 data.totalEquity = founders;
@@ -25,20 +25,22 @@ $(document).ready(function () {
 	initMonth(data,"Mar 19","mar19",1);
 	initMonth(data,"Apr 19","apr19",2);
 	initMonth(data,"May 19","may19",2);
-	initMonth(data,"Jun 19","jun19",3);
+	initMonth(data,"Jun 19","jun19",2);
 	initMonth(data,"Jul 19","jul19",0);
 
 	updateAll();
 });
 
 function initMonth(data,mTitle, mKey, newEquityCnt) {
-	data.totalEquity = data.totalEquity + newEquityCnt;
 	data.inx++;
 	data.months.push({
 		inx : data.inx,
 		mTitle: mTitle,
 		mKey: mKey
 	});
+	data.cnts.push(newEquityCnt);
+	/*
+	data.totalEquity = data.totalEquity + newEquityCnt;
 	data.equity.push({
 		newEquityCnt : newEquityCnt,
 			equityToDate : data.totalEquity
@@ -64,23 +66,69 @@ function initMonth(data,mTitle, mKey, newEquityCnt) {
 			});
 		}
 	}
+	*/
 }
 
 function changeEquities(event) {
 	var id = event.target.id;
+	var m = id.split("_")[1];
 	var val = event.target.value;
-	console.log("changeEquities all", id, val);
+
+	console.log("changeEquities all", m, val);
+	data.cnts[m] = val;
+	updateAll();
 }
 
-function updateAll(event) {
+function updateAll() {
+	setupData();
 	computeBuddlessEquities(data);
 	var html=[];
 	for(var i=0; i < data.equity.length;i++) {
 		oneLadder(html,data,i);
 	}
 	$("#ladderContainer").html(html.join('\n'));
-
 }
+
+
+function setupData() {
+	data.totalEquity=founders;
+	data.equity = [];
+	data.assoc = [];
+	for(var m=0;m<data.months.length;m++) {
+		var month = data.months[m];
+		var newEquityCnt = 1* data.cnts[m];
+		data.totalEquity = data.totalEquity + newEquityCnt;
+		var newE = {
+			newEquityCnt : newEquityCnt,
+			equityToDate : data.totalEquity
+		};
+		data.equity.push(newE);
+		console.log("setup e", m, newE);
+		data.assoc.push({
+			amList: [], newAssocCnt: 0, forMonth: {}
+		});
+		if(newEquityCnt>0) {
+			var neededAMs = newEquityCnt * assocToEquityRatio;
+			// step back X months
+			var amJoinMonthInx = m - monthsAsAssoc;
+			amJoinMonthInx = amJoinMonthInx < 0 ? 0 : amJoinMonthInx;
+			var amMonth = data.months[m];
+			var mKey = amMonth.mKey;
+			// work with the record from X months ago
+			var am = data.assoc[amJoinMonthInx];
+			am.newAssocCnt = neededAMs;
+			am.forMonth = amMonth;
+			// add the needed AMs to each month starting from X months ago up to current month less one
+			for(var i =amJoinMonthInx; i < m; i++){
+				data.assoc[i].amList.push({
+					mKey : mKey, cnt: neededAMs
+				});
+			}
+		}
+	}
+}
+
+
 function computeBuddlessEquities(data) {
 	var months = data.months;
 	for(var i = 0; i< months.length; i++ ) {
@@ -119,7 +167,7 @@ function oneLadder(html,data,inx) {
 
 	html.push('<div class="month_header">');
 	html.push('<div >'+monthTitle + '</div>');
-	var eInput = '<input id="input_'+monthKey+'" onchange="changeEquities(event);" type="number" name="ems" min="1" max="5" value="'+eCnt+'">'
+	var eInput = '<input id="input_'+inx+'" onchange="changeEquities(event);" type="number" name="ems" min="1" max="5" value="'+eCnt+'">'
 	html.push('<div >EM: '+ eInput+'</div>');
 	html.push('<div >AM: '+ amCnt+'</div>');
 	html.push('<div >'+ amMonth+'</div>');
